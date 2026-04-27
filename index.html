@@ -16,28 +16,35 @@ body {
     color: #f5f5f5;
 }
 
-/* Snow */
+/* Snow (pure CSS - no broken links) */
 .snow {
     position: fixed;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    background-image: url('https://i.ibb.co/5G9s0K7/snow.png');
-    animation: snow 20s linear infinite;
-    opacity: 0.4;
 }
-@keyframes snow {
-    from {background-position: 0 0;}
-    to {background-position: 0 1000px;}
+.snow::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 200%;
+    background-image: radial-gradient(white 1px, transparent 1px);
+    background-size: 25px 25px;
+    animation: snowFall 25s linear infinite;
+    opacity: 0.3;
+}
+@keyframes snowFall {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
 }
 
-/* Lamp glow */
+/* Warm lamp glow */
 .lamp {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 200px;
-    background: radial-gradient(circle, rgba(255,223,186,0.25), transparent);
+    height: 250px;
+    background: radial-gradient(circle at 50% 100%, rgba(255,223,186,0.35), transparent 60%);
 }
 
 /* Slides */
@@ -50,7 +57,6 @@ body {
     flex-direction: column;
     text-align: center;
     padding: 20px;
-    position: relative;
 }
 .active { display: flex; }
 
@@ -61,9 +67,10 @@ body {
     border-radius: 25px;
     border: none;
     cursor: pointer;
+    font-size: 16px;
 }
 
-/* Glow */
+/* Glow text */
 .glow {
     font-size: 2.5rem;
     animation: pulse 3s infinite;
@@ -80,25 +87,28 @@ body {
     max-width: 600px;
 }
 
-/* Images slide 2 */
+/* Slide 2 images */
 .image-container img {
-    width: 180px;
+    width: 170px;
     margin: 10px;
     border-radius: 10px;
     opacity: 0;
     transform: translateY(20px);
     transition: 2s;
 }
-.show { opacity: 1 !important; transform: translateY(0); }
+.show {
+    opacity: 1 !important;
+    transform: translateY(0);
+}
 
 /* Polaroid */
 .polaroid {
     position: absolute;
-    width: 170px;
+    width: 160px;
     background: white;
     padding: 10px;
     color: black;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     opacity: 0;
     transform: scale(0.8);
     transition: 1.5s;
@@ -110,7 +120,7 @@ body {
     margin-top: 5px;
 }
 
-/* Final text */
+/* Final */
 .fade-text {
     font-size: 1rem;
     max-width: 700px;
@@ -139,7 +149,7 @@ body {
 <div class="slide" id="slide1">
 <div class="glow">Hiii Bhawwwuuu</div>
 <div class="subtext">
-Haan haan mai jaanta hu mai koi coder nahi hu,  
+Haan haan mai jaanta hu mai koi coder nahi hu,<br>
 par I am trying to do anything that I can do for you..
 </div>
 </div>
@@ -152,7 +162,7 @@ par I am trying to do anything that I can do for you..
 <img src="img2.jpeg">
 <img src="img3.jpeg">
 </div>
-<p>We have been more than just a couple..  
+<p>We have been more than just a couple..<br>
 Fought a lot, loved a lot, we've known each other a lot..</p>
 </div>
 
@@ -162,12 +172,10 @@ Fought a lot, loved a lot, we've known each other a lot..</p>
 <!-- Slide 4 -->
 <div class="slide" id="slide4">
 <div class="fade-text" id="finalText">
-It is just the starting of the world we're craving to build for ourselves...  
-and I am craving to build it with you.  
-<br><br>
-You're the most important, most beautiful and most sexy gift for me..  
-<br><br>
-I love you very much, and I cannot see you with somebody else..  
+It is just the starting of the world we're craving to build for ourselves...<br><br>
+and I am craving to build it with you.<br><br>
+You're the most important, most beautiful and most sexy gift for me..<br><br>
+I love you very much, and I cannot see you with somebody else..<br>
 I want to grow old having you beside me.
 </div>
 
@@ -198,7 +206,7 @@ function nextSlide() {
     if(currentSlide === 4) showFinal();
 }
 
-/* slower image pop */
+/* Slow image reveal */
 function showImages() {
     let imgs = document.querySelectorAll("#slide2 img");
     imgs.forEach((img, i) => {
@@ -206,7 +214,7 @@ function showImages() {
     });
 }
 
-/* Polaroid layout */
+/* Polaroids */
 function showPolaroids() {
     let images = ["img4.jpeg","img5.jpeg","img6.jpeg","img7.jpeg","img8.jpeg"];
     let captions = [
@@ -218,11 +226,11 @@ function showPolaroids() {
     ];
 
     let positions = [
-        {left:"10%", top:"10%"},
-        {right:"10%", top:"20%"},
-        {left:"15%", top:"40%"},
-        {right:"15%", top:"50%"},
-        {left:"25%", top:"70%"}
+        {left:"8%", top:"10%"},
+        {right:"8%", top:"20%"},
+        {left:"12%", top:"40%"},
+        {right:"12%", top:"55%"},
+        {left:"20%", top:"70%"}
     ];
 
     setTimeout(() => {
@@ -230,8 +238,9 @@ function showPolaroids() {
             setTimeout(() => {
                 let div = document.createElement("div");
                 div.className = "polaroid";
-                div.style.left = positions[i].left;
-                div.style.right = positions[i].right;
+
+                if(positions[i].left) div.style.left = positions[i].left;
+                if(positions[i].right) div.style.right = positions[i].right;
                 div.style.top = positions[i].top;
 
                 div.innerHTML = `
@@ -241,11 +250,11 @@ function showPolaroids() {
 
                 document.getElementById("slide3").appendChild(div);
 
-                setTimeout(()=> div.style.opacity = 1, 100);
+                setTimeout(() => div.style.opacity = 1, 100);
 
             }, i * 3000);
         });
-    }, 5000);
+    }, 4000);
 }
 
 /* Final */
