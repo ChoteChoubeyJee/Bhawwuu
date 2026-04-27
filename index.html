@@ -12,39 +12,17 @@ body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
-    background: linear-gradient(to bottom, #1a1a1a, #3b2f2f);
+    background: radial-gradient(circle at center, #2b2b2b, #1a1a1a);
     color: #f5f5f5;
 }
 
-/* Snow (pure CSS - no broken links) */
-.snow {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-.snow::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 200%;
-    background-image: radial-gradient(white 1px, transparent 1px);
-    background-size: 25px 25px;
-    animation: snowFall 25s linear infinite;
-    opacity: 0.3;
-}
-@keyframes snowFall {
-    from { transform: translateY(-100%); }
-    to { transform: translateY(0); }
-}
-
-/* Warm lamp glow */
+/* Lamp glow */
 .lamp {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 250px;
-    background: radial-gradient(circle at 50% 100%, rgba(255,223,186,0.35), transparent 60%);
+    height: 300px;
+    background: radial-gradient(circle at 50% 100%, rgba(255,223,186,0.35), transparent 65%);
 }
 
 /* Slides */
@@ -57,6 +35,7 @@ body {
     flex-direction: column;
     text-align: center;
     padding: 20px;
+    position: relative;
 }
 .active { display: flex; }
 
@@ -67,12 +46,11 @@ body {
     border-radius: 25px;
     border: none;
     cursor: pointer;
-    font-size: 16px;
 }
 
 /* Glow text */
 .glow {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     animation: pulse 3s infinite;
 }
 @keyframes pulse {
@@ -82,15 +60,15 @@ body {
 
 .subtext {
     margin-top: 25px;
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: #ddd;
-    max-width: 600px;
+    max-width: 650px;
 }
 
 /* Slide 2 images */
 .image-container img {
-    width: 170px;
-    margin: 10px;
+    width: 190px;
+    margin: 12px;
     border-radius: 10px;
     opacity: 0;
     transform: translateY(20px);
@@ -104,26 +82,26 @@ body {
 /* Polaroid */
 .polaroid {
     position: absolute;
-    width: 160px;
+    width: 200px;
     background: white;
     padding: 10px;
     color: black;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.7);
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.85);
     transition: 1.5s;
 }
 .polaroid img { width: 100%; }
 
 .caption {
-    font-size: 0.8rem;
-    margin-top: 5px;
+    font-size: 0.85rem;
+    margin-top: 6px;
 }
 
 /* Final */
 .fade-text {
-    font-size: 1rem;
-    max-width: 700px;
+    font-size: 1.05rem;
+    max-width: 750px;
     opacity: 0;
     transition: 4s;
 }
@@ -133,8 +111,6 @@ body {
 </head>
 
 <body>
-
-<div class="snow"></div>
 
 <audio id="bgMusic" loop>
 <source src="Udaarian - Satinder Sartaaj.mp3" type="audio/mp3">
@@ -179,7 +155,7 @@ I love you very much, and I cannot see you with somebody else..<br>
 I want to grow old having you beside me.
 </div>
 
-<img src="img10.jpeg" id="finalImage" style="width:220px; opacity:0; margin-top:20px; transition:4s;">
+<img src="img10.jpeg" id="finalImage" style="width:240px; opacity:0; margin-top:20px; transition:4s;">
 </div>
 
 <div class="lamp"></div>
@@ -206,7 +182,7 @@ function nextSlide() {
     if(currentSlide === 4) showFinal();
 }
 
-/* Slow image reveal */
+/* Slide 2 slow */
 function showImages() {
     let imgs = document.querySelectorAll("#slide2 img");
     imgs.forEach((img, i) => {
@@ -214,7 +190,7 @@ function showImages() {
     });
 }
 
-/* Polaroids */
+/* PERFECT inverted pyramid */
 function showPolaroids() {
     let images = ["img4.jpeg","img5.jpeg","img6.jpeg","img7.jpeg","img8.jpeg"];
     let captions = [
@@ -226,11 +202,11 @@ function showPolaroids() {
     ];
 
     let positions = [
-        {left:"8%", top:"10%"},
-        {right:"8%", top:"20%"},
-        {left:"12%", top:"40%"},
-        {right:"12%", top:"55%"},
-        {left:"20%", top:"70%"}
+        {left:"8%", top:"8%"},          // left top
+        {right:"8%", top:"12%"},        // right top
+        {left:"22%", top:"35%"},        // left mid (towards center)
+        {right:"22%", top:"40%"},       // right mid (towards center)
+        {left:"50%", top:"65%", center:true} // bottom center
     ];
 
     setTimeout(() => {
@@ -239,8 +215,14 @@ function showPolaroids() {
                 let div = document.createElement("div");
                 div.className = "polaroid";
 
-                if(positions[i].left) div.style.left = positions[i].left;
-                if(positions[i].right) div.style.right = positions[i].right;
+                if(positions[i].center){
+                    div.style.left = "50%";
+                    div.style.transform = "translateX(-50%) scale(0.85)";
+                } else {
+                    if(positions[i].left) div.style.left = positions[i].left;
+                    if(positions[i].right) div.style.right = positions[i].right;
+                }
+
                 div.style.top = positions[i].top;
 
                 div.innerHTML = `
