@@ -16,15 +16,6 @@ body {
     color: #f5f5f5;
 }
 
-/* Lamp glow */
-.lamp {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 300px;
-    background: radial-gradient(circle at 50% 100%, rgba(255,223,186,0.35), transparent 65%);
-}
-
 /* Slides */
 .slide {
     width: 100vw;
@@ -34,7 +25,6 @@ body {
     align-items: center;
     flex-direction: column;
     text-align: center;
-    padding: 20px;
     position: relative;
 }
 .active { display: flex; }
@@ -50,7 +40,7 @@ body {
 
 /* Glow text */
 .glow {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     animation: pulse 3s infinite;
 }
 @keyframes pulse {
@@ -59,16 +49,15 @@ body {
 }
 
 .subtext {
-    margin-top: 25px;
-    font-size: 1.05rem;
-    color: #ddd;
-    max-width: 650px;
+    margin-top: 20px;
+    font-size: 1rem;
+    max-width: 600px;
 }
 
-/* Slide 2 images */
+/* Slide 2 */
 .image-container img {
-    width: 190px;
-    margin: 12px;
+    width: 170px;
+    margin: 10px;
     border-radius: 10px;
     opacity: 0;
     transform: translateY(20px);
@@ -82,26 +71,25 @@ body {
 /* Polaroid */
 .polaroid {
     position: absolute;
-    width: 200px;
+    width: 150px;
     background: white;
-    padding: 10px;
+    padding: 8px;
     color: black;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
     opacity: 0;
-    transform: scale(0.85);
     transition: 1.5s;
 }
 .polaroid img { width: 100%; }
 
 .caption {
-    font-size: 0.85rem;
-    margin-top: 6px;
+    font-size: 0.75rem;
+    margin-top: 5px;
 }
 
 /* Final */
 .fade-text {
-    font-size: 1.05rem;
-    max-width: 750px;
+    font-size: 1rem;
+    max-width: 700px;
     opacity: 0;
     transition: 4s;
 }
@@ -155,10 +143,8 @@ I love you very much, and I cannot see you with somebody else..<br>
 I want to grow old having you beside me.
 </div>
 
-<img src="img10.jpeg" id="finalImage" style="width:240px; opacity:0; margin-top:20px; transition:4s;">
+<img src="img10.jpeg" id="finalImage" style="width:220px; opacity:0; margin-top:20px; transition:4s;">
 </div>
-
-<div class="lamp"></div>
 
 <script>
 let currentSlide = 0;
@@ -182,7 +168,7 @@ function nextSlide() {
     if(currentSlide === 4) showFinal();
 }
 
-/* Slide 2 slow */
+/* Slide 2 */
 function showImages() {
     let imgs = document.querySelectorAll("#slide2 img");
     imgs.forEach((img, i) => {
@@ -190,7 +176,7 @@ function showImages() {
     });
 }
 
-/* PERFECT inverted pyramid */
+/* PERFECT NON-OVERLAPPING PYRAMID */
 function showPolaroids() {
     let images = ["img4.jpeg","img5.jpeg","img6.jpeg","img7.jpeg","img8.jpeg"];
     let captions = [
@@ -202,41 +188,40 @@ function showPolaroids() {
     ];
 
     let positions = [
-        {left:"8%", top:"8%"},          // left top
-        {right:"8%", top:"12%"},        // right top
-        {left:"22%", top:"35%"},        // left mid (towards center)
-        {right:"22%", top:"40%"},       // right mid (towards center)
-        {left:"50%", top:"65%", center:true} // bottom center
+        {x: 15, y: 15},
+        {x: 75, y: 15},
+        {x: 25, y: 45},
+        {x: 65, y: 45},
+        {x: 50, y: 75}
     ];
+
+    let container = document.getElementById("slide3");
 
     setTimeout(() => {
         images.forEach((img, i) => {
             setTimeout(() => {
+
                 let div = document.createElement("div");
                 div.className = "polaroid";
 
-                if(positions[i].center){
-                    div.style.left = "50%";
-                    div.style.transform = "translateX(-50%) scale(0.85)";
-                } else {
-                    if(positions[i].left) div.style.left = positions[i].left;
-                    if(positions[i].right) div.style.right = positions[i].right;
-                }
-
-                div.style.top = positions[i].top;
+                div.style.left = positions[i].x + "%";
+                div.style.top = positions[i].y + "%";
+                div.style.transform = "translate(-50%, -50%)";
 
                 div.innerHTML = `
                     <img src="${img}">
                     <div class="caption">${captions[i]}</div>
                 `;
 
-                document.getElementById("slide3").appendChild(div);
+                container.appendChild(div);
 
-                setTimeout(() => div.style.opacity = 1, 100);
+                setTimeout(() => {
+                    div.style.opacity = 1;
+                }, 100);
 
             }, i * 3000);
         });
-    }, 4000);
+    }, 3000);
 }
 
 /* Final */
